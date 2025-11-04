@@ -10,4 +10,18 @@ export class TaxPaymentEventRepositoryORMAdaptor
       TaxPaymentEventORM.fromDomain(taxPaymentEvent)
     );
   }
+
+  async findTotalTaxPaymentAmountsBeforeOrEqualToDate(
+    date: Date
+  ): Promise<number> {
+    // Intentional aggregation query here instead of calculating with much less efficiency at scale with node.js
+    const result = await TaxPaymentEventORM.createQueryBuilder(
+      "taxPaymentEvent"
+    )
+      .select("SUM(taxPaymentEvent.amount)", "totalTaxPaid")
+      .where("taxPaymentEvent.date <= :date", { date })
+      .getRawOne<{ totalTaxPaid: number | null }>();
+
+    return result?.totalTaxPaid ?? 0;
+  }
 }

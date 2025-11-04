@@ -14,7 +14,7 @@ export class SaleEventORM extends BaseEntity {
   date!: Date;
 
   // #region Relations
-  @OneToMany(() => SaleEventItemORM, (item) => item.saleEventId, {
+  @OneToMany(() => SaleEventItemORM, (item) => item.saleEvent, {
     cascade: ["insert", "remove", "update"],
   })
   items?: SaleEventItemORM[];

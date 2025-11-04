@@ -9,6 +9,7 @@ import { container } from "tsyringe";
 import { AddTransactionEventUseCase } from "./core/use-cases/add-transaction-event-use-case";
 import { DI } from "./infrastructure/di/di-tokens";
 import { DataSource } from "typeorm";
+import { GetTaxPositionUseCase } from "./core/use-cases/get-tax-position-use-case";
 
 const init = async () => {
   const dataSource = container.resolve<DataSource>(DI.dataSource);
@@ -49,7 +50,18 @@ const init = async () => {
 
     return void res.status(202).send();
   });
-  // app.get("/tax-position")
+
+  app.get("/tax-position", async (req, res) => {
+    const { date } = req.query;
+
+    const parsedDate = z.coerce.date().parse(date);
+
+    const getTaxPositionUseCase = container.resolve(GetTaxPositionUseCase);
+    const result = await getTaxPositionUseCase.execute(parsedDate);
+
+    return void res.json({ date: parsedDate, taxPosition: result });
+  });
+
   // app.patch("/sale");
 
   app.listen(port, () => {

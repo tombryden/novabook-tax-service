@@ -10,12 +10,13 @@ describe("AddTransactionEventUseCase", () => {
   const childContainer = container.createChildContainer(); // so parallel running test files don't get their IoC container mixed up
 
   // Container registration
-  const mockSaleEventRepository: SaleEventRepositoryPort = {
+  const mockSaleEventRepository: Partial<SaleEventRepositoryPort> = {
     save: jest.fn(),
   };
-  const mockTaxPaymentEventRepository: TaxPaymentEventRepositoryPort = {
-    save: jest.fn(),
-  };
+  const mockTaxPaymentEventRepository: Partial<TaxPaymentEventRepositoryPort> =
+    {
+      save: jest.fn(),
+    };
   childContainer.register(DI.saleEventRepositoryPort, {
     useValue: mockSaleEventRepository,
   });

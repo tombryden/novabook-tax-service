@@ -8,4 +8,17 @@ export class SaleEventRepositoryORMAdaptor implements SaleEventRepositoryPort {
 
     return SaleEventORM.toDomain(resp);
   }
+
+  async findTotalSaleEventItemsTaxBeforeOrEqualToDate(
+    date: Date
+  ): Promise<number> {
+    // Intentional aggregation query here instead of calculating with much less efficiency at scale with node.js
+    const result = await SaleEventORM.createQueryBuilder("saleEvent")
+      .innerJoin("saleEvent.items", "item")
+      .select("SUM(item.cost * item.taxRate)", "totalTax")
+      .where("saleEvent.date <= :date", { date })
+      .getRawOne<{ totalTax: number | null }>();
+
+    return result?.totalTax ?? 0;
+  }
 }
