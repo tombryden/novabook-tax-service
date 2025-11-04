@@ -1,8 +1,15 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
-import { SQLiteSaleEvent } from "./sqlite-sale-event";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
+} from "typeorm";
+import { SaleEventORM } from "./sale-event-orm";
 
 @Entity({ name: "sale_event_items" })
-export class SQLiteSaleEventItem {
+export class SaleEventItemORM extends BaseEntity {
   @PrimaryColumn()
   id!: string;
 
@@ -15,12 +22,12 @@ export class SQLiteSaleEventItem {
   @Column()
   cost!: number;
 
-  @Column({ name: "cost" })
+  @Column()
   taxRate!: number;
 
   // #region Relations
-  @ManyToOne(() => SQLiteSaleEvent, (event) => event.items)
+  @ManyToOne(() => SaleEventORM, (event) => event.items)
   @JoinColumn({ name: "sale_event_id" })
-  saleEvent?: SQLiteSaleEventItem;
+  saleEvent?: SaleEventORM;
   // #endregion
 }

@@ -53,6 +53,7 @@ export class AddTransactionEventUseCase {
       if (!amount) {
         throw new Error("You must supply an amount with a tax payment event");
       }
+      console.log("hit");
       const taxPaymentEvent = new TaxPaymentEvent({ date, amount });
       await this.taxPaymentEventRepository.save(taxPaymentEvent);
     }
