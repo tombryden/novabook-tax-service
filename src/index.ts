@@ -53,7 +53,7 @@ const init = async () => {
   // app.patch("/sale");
 
   app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`);
+    console.log(`Tax service listening on port ${port}`);
   });
 };
 
