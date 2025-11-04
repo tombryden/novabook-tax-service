@@ -1,7 +1,7 @@
 import { container } from "tsyringe";
-import { SaleEventRepositoryORMAdaptor } from "./adaptors/persistence/typeorm/repositories/sale-event-repository-orm-adaptor";
-import { dataSource } from "./adaptors/persistence/typeorm/data-source";
-import { TaxPaymentEventRepositoryORMAdaptor } from "./adaptors/persistence/typeorm/repositories/tax-payment-event-repository-orm-adaptor";
+import { SaleEventRepositoryORMAdaptor } from "../adaptors/persistence/typeorm/repositories/sale-event-repository-orm-adaptor";
+import { dataSource } from "../adaptors/persistence/typeorm/data-source";
+import { TaxPaymentEventRepositoryORMAdaptor } from "../adaptors/persistence/typeorm/repositories/tax-payment-event-repository-orm-adaptor";
 import { DI } from "./di-tokens";
 
 export const registerDi = () => {

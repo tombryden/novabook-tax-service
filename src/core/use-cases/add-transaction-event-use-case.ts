@@ -1,5 +1,4 @@
 import { SaleEvent } from "../entities/sale-event/sale-event";
-import { SaleEventItem } from "../entities/sale-event/sale-event-item";
 import { TaxPaymentEvent } from "../entities/tax-payment-event";
 import type { SaleEventRepositoryPort } from "../ports/sale-event-repository-port";
 import { inject, injectable } from "tsyringe";
@@ -11,6 +10,14 @@ interface AddSaleEventItem {
   itemId: string;
   cost: number;
   taxRate: number;
+}
+
+interface AddTransactionEventUseCaseParams {
+  eventType: EventType;
+  date: Date;
+  invoiceId?: string; // does nothing if event is TAX_PAYMENT
+  items?: AddSaleEventItem[]; // does nothing if event is TAX_PAYMENT
+  amount?: number; // does nothing if event is SALE
 }
 
 /**
@@ -25,13 +32,13 @@ export class AddTransactionEventUseCase {
     private readonly taxPaymentEventRepository: TaxPaymentEventRepositoryPort
   ) {}
 
-  async execute(
-    eventType: EventType,
-    date: Date,
-    invoiceId?: string, // does nothing if event is TAX_PAYMENT
-    items?: AddSaleEventItem[], // does nothing if event is TAX_PAYMENT
-    amount?: number // does nothing if event is SALE
-  ): Promise<string> {
+  async execute({
+    eventType,
+    date,
+    invoiceId,
+    items,
+    amount,
+  }: AddTransactionEventUseCaseParams): Promise<string> {
     if (eventType === "SALES") {
       if (!invoiceId || !items || items.length === 0) {
         throw new Error(
@@ -39,19 +46,18 @@ export class AddTransactionEventUseCase {
         );
       }
 
-      const saleEvent = new SaleEvent({ invoiceId, date });
-      saleEvent.items = [];
-
-      for (const item of items) {
-        saleEvent.items.push(
-          new SaleEventItem({ ...item, saleEventId: saleEvent.id })
-        );
-      }
+      const saleEvent = new SaleEvent({ invoiceId, date, items });
 
       await this.saleEventRepository.save(saleEvent);
     } else {
       if (!amount) {
         throw new Error("You must supply an amount with a tax payment event");
+      }
+
+      if (invoiceId || items) {
+        throw new Error(
+          "Tax payment event cannot accept an invoice id or items"
+        );
       }
 
       const taxPaymentEvent = new TaxPaymentEvent({ date, amount });

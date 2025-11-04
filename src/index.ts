@@ -1,13 +1,13 @@
 import "reflect-metadata";
 
-import { registerDi } from "./infrastructure/register-di";
+import { registerDi } from "./infrastructure/di/register-di";
 registerDi();
 
 import express from "express";
 import z from "zod";
 import { container } from "tsyringe";
 import { AddTransactionEventUseCase } from "./core/use-cases/add-transaction-event-use-case";
-import { DI } from "./infrastructure/di-tokens";
+import { DI } from "./infrastructure/di/di-tokens";
 import { DataSource } from "typeorm";
 
 const init = async () => {
@@ -38,20 +38,14 @@ const init = async () => {
     const body = req.body;
     const parsed = transactionsBody.parse(body);
 
-    // if (parsed.error) {
-    //   return void res
-    //     .json({ success: false, error: "Bad request body" })
-    //     .status(400);
-    // }
-
     const addEventUseCase = container.resolve(AddTransactionEventUseCase);
-    await addEventUseCase.execute(
-      parsed.eventType,
-      parsed.date,
-      parsed.invoiceId,
-      parsed.items,
-      parsed.amount
-    );
+    await addEventUseCase.execute({
+      eventType: parsed.eventType,
+      date: parsed.date,
+      invoiceId: parsed.invoiceId,
+      items: parsed.items,
+      amount: parsed.amount,
+    });
 
     return void res.status(202).send();
   });
