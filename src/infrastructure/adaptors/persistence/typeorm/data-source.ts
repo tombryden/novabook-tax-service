@@ -6,7 +6,7 @@ import { SaleEventItemORM } from "./entities/sale-event/sale-event-item-orm";
 export const dataSource = new DataSource({
   type: "sqlite",
   // database: ":memory:",
-  database: "tax-service.db",
+  database: "tax-service.sql",
   entities: [SaleEventORM, SaleEventItemORM, TaxPaymentEventORM],
   synchronize: true,
 });
