@@ -53,7 +53,7 @@ const init = async () => {
       parsed.amount
     );
 
-    return void res.status(202);
+    return void res.status(202).send();
   });
   // app.get("/tax-position")
   // app.patch("/sale");
