@@ -12,6 +12,7 @@ describe("AddTransactionEventUseCase", () => {
   // Container registration
   const mockSaleEventRepository: Partial<SaleEventRepositoryPort> = {
     save: jest.fn(),
+    existsByInvoiceId: jest.fn().mockResolvedValue(false),
   };
   const mockTaxPaymentEventRepository: Partial<TaxPaymentEventRepositoryPort> =
     {
@@ -131,6 +132,28 @@ describe("AddTransactionEventUseCase", () => {
         "You must supply an invoiceId + item(s) with a sales event"
       );
       expect(mockSaleEventRepository.save).toHaveBeenCalledTimes(0);
+    });
+
+    it("should throw if a sale event with the invoiceId already exists", () => {
+      const container = childContainer.createChildContainer();
+      const mockSaleEventRepositoryExistingInvoiceId: Partial<SaleEventRepositoryPort> =
+        {
+          existsByInvoiceId: jest.fn().mockResolvedValue(true),
+        };
+      container.register(DI.saleEventRepositoryPort, {
+        useValue: mockSaleEventRepositoryExistingInvoiceId,
+      });
+      const alreadyExistsUseCase = container.resolve(
+        AddTransactionEventUseCase
+      );
+      expect(
+        alreadyExistsUseCase.execute({
+          eventType: "SALES",
+          date: new Date(),
+          invoiceId: "123",
+          items: [{ itemId: "1", cost: 100, taxRate: 0.2 }],
+        })
+      ).rejects.toThrow("Sale Event with invoiceId 123 already exists");
     });
   });
 });

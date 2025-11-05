@@ -40,9 +40,19 @@ export class AddTransactionEventUseCase {
     amount,
   }: AddTransactionEventUseCaseParams): Promise<string> {
     if (eventType === "SALES") {
+      // SALE EVENT
       if (!invoiceId || !items || items.length === 0) {
         throw new Error(
           "You must supply an invoiceId + item(s) with a sales event"
+        );
+      }
+
+      // Ensure that the invoiceId doesn't already have a sale event
+      const existingSaleEvent =
+        await this.saleEventRepository.existsByInvoiceId(invoiceId);
+      if (existingSaleEvent) {
+        throw new Error(
+          `Sale Event with invoiceId ${invoiceId} already exists`
         );
       }
 
@@ -50,6 +60,7 @@ export class AddTransactionEventUseCase {
 
       await this.saleEventRepository.save(saleEvent);
     } else {
+      // TAX PAYMENT
       if (!amount) {
         throw new Error("You must supply an amount with a tax payment event");
       }

@@ -21,7 +21,18 @@ export class SaleEvent {
     this.date = date;
     if (items) {
       this.items = [];
+
+      // Ensure that the same itemId can only appear once in the same sale event (in README.md assumptions)
+      const existingItemIds = new Set<string>();
+
       for (const item of items) {
+        if (existingItemIds.has(item.itemId))
+          throw new Error(
+            `A sale event can only have unique itemIds. ${item.itemId} appears more than once.`
+          );
+
+        existingItemIds.add(item.itemId);
+
         this.items.push(new SaleEventItem({ ...item, saleEventId: this.id }));
       }
     }

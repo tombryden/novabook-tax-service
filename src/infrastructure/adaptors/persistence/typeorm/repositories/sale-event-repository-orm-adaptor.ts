@@ -21,4 +21,8 @@ export class SaleEventRepositoryORMAdaptor implements SaleEventRepositoryPort {
 
     return result?.totalTax ?? 0;
   }
+
+  existsByInvoiceId(invoiceId: string): Promise<boolean> {
+    return SaleEventORM.existsBy({ invoiceId });
+  }
 }

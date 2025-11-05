@@ -7,7 +7,7 @@
     "dev": "tsup src/index.ts --onSuccess='node dist/index.js' --watch",
     "check-types": "tsc --noEmit",
     "lint": "eslint --max-warnings=0",
-    "test": "jest"
+    "test": "jest --verbose"
   },
   "keywords": [],
   "author": "",
