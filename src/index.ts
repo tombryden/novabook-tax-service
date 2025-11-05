@@ -10,6 +10,7 @@ import { AddTransactionEventUseCase } from "./core/use-cases/add-transaction-eve
 import { DI } from "./infrastructure/di/di-tokens";
 import { DataSource } from "typeorm";
 import { GetTaxPositionUseCase } from "./core/use-cases/get-tax-position-use-case";
+import { UpsertAmendmentUseCase } from "./core/use-cases/upsert-amendment-use-case";
 
 const init = async () => {
   const dataSource = container.resolve<DataSource>(DI.dataSource);
@@ -62,7 +63,27 @@ const init = async () => {
     return void res.json({ date: parsedDate, taxPosition: result });
   });
 
-  // app.patch("/sale");
+  const saleBody = z.object({
+    date: z.coerce.date(),
+    invoiceId: z.string(),
+    itemId: z.string(),
+    cost: z.number(),
+    taxRate: z.number(),
+  });
+  app.patch("/sale", async (req, res) => {
+    const { date, cost, invoiceId, itemId, taxRate } = saleBody.parse(req.body);
+
+    const upsertAmendmentUseCase = container.resolve(UpsertAmendmentUseCase);
+    await upsertAmendmentUseCase.execute(
+      date,
+      invoiceId,
+      itemId,
+      cost,
+      taxRate
+    );
+
+    return void res.status(202).send();
+  });
 
   app.listen(port, () => {
     console.log(`Tax service listening on port ${port}`);
