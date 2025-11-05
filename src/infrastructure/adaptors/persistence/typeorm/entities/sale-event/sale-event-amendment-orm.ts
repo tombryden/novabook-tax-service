@@ -18,7 +18,7 @@ export class SaleEventAmendmentORM extends BaseEntity {
   @Column()
   cost!: number;
 
-  @Column()
+  @Column({ type: "real" })
   taxRate!: number;
 
   // #region Mappers

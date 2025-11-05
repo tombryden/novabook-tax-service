@@ -22,7 +22,7 @@ export class SaleEventItemORM extends BaseEntity {
   @Column()
   cost!: number;
 
-  @Column()
+  @Column({ type: "real" })
   taxRate!: number;
 
   // #region Relations
