@@ -20,7 +20,7 @@ Basic error responses have been implemented with express middleware, but this co
 
 ## Tests
 
-Comprehensive tests have been added, including unit tests of the core business logic and a couple of full e2e tests.
+18 tests have been added, including unit tests of the core business logic and a couple of full e2e tests. You can run these via `pnpm test`
 
 ## Libraries & Tools Used
 
