@@ -2,7 +2,7 @@
 
 ## Setup
 
-Video showing setup + usage: https://www.screengo.ai/video/1307f5d8-d8ee-4f5d-812d-e8c50b60f05f
+Video showing setup + brief overview: https://www.screengo.ai/video/1307f5d8-d8ee-4f5d-812d-e8c50b60f05f
 
 - git clone https://github.com/tombryden/novabook-tax-service
 - cd into cloned directory
