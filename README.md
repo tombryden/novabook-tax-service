@@ -1,5 +1,14 @@
 # Novabook Tax Service
 
+## Setup
+
+Video showing setup + usage: https://www.screengo.ai/video/1307f5d8-d8ee-4f5d-812d-e8c50b60f05f
+
+- git clone https://github.com/tombryden/novabook-tax-service
+- cd into cloned directory
+- pnpm i
+- pnpm dev (express server runs on port 4000)
+
 ## Architecture
 
 - Hexagonal Architecture with use cases
@@ -8,11 +17,14 @@
 ## Libraries & Tools Used
 
 - Express
+- SQLite
 - TypeORM
 - Eslint
 - Tsup
 - Jest
 - Tsyringe
+- Pino
+- Prettier
 
 ## Assumptions
 
