@@ -2,6 +2,7 @@ import { inject, injectable } from "tsyringe";
 import { DI } from "../../infrastructure/di/di-tokens";
 import type { SaleEventAmendmentRepositoryPort } from "../ports/sale-event-amendment-repository-port";
 import { SaleEventAmendment } from "../entities/sale-event/sale-event-amendment";
+import type { LoggerPort } from "../ports/logger-port";
 
 /**
  * Creates (or updates if matching date + invoice + item) an amendment
@@ -10,7 +11,9 @@ import { SaleEventAmendment } from "../entities/sale-event/sale-event-amendment"
 export class UpsertAmendmentUseCase {
   constructor(
     @inject(DI.saleEventAmendmentRepositoryPort)
-    private readonly saleEventAmendmentRepository: SaleEventAmendmentRepositoryPort
+    private readonly saleEventAmendmentRepository: SaleEventAmendmentRepositoryPort,
+    @inject(DI.loggerPort)
+    private readonly logger: LoggerPort
   ) {}
 
   async execute(
@@ -20,6 +23,14 @@ export class UpsertAmendmentUseCase {
     cost: number,
     taxRate: number
   ) {
+    this.logger.info("Upserting amendment", {
+      date: date.toISOString(),
+      invoiceId,
+      itemId,
+      cost,
+      taxRate,
+    });
+
     // Find existing, if found, update existing amendment, if not create new
     let amendment =
       await this.saleEventAmendmentRepository.findOneByInvoiceIdDateAndItemId(
@@ -27,6 +38,9 @@ export class UpsertAmendmentUseCase {
         date,
         itemId
       );
+
+    const isNewAmendment = !amendment;
+
     if (!amendment) {
       amendment = new SaleEventAmendment({
         date,
@@ -42,6 +56,19 @@ export class UpsertAmendmentUseCase {
     amendment.cost = cost;
     amendment.taxRate = taxRate;
 
-    return this.saleEventAmendmentRepository.save(amendment);
+    const result = await this.saleEventAmendmentRepository.save(amendment);
+
+    this.logger.info(
+      isNewAmendment ? "Amendment created" : "Amendment updated",
+      {
+        invoiceId,
+        itemId,
+        cost,
+        taxRate,
+        date: date.toISOString(),
+      }
+    );
+
+    return result;
   }
 }

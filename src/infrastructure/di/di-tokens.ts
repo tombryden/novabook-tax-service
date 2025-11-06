@@ -3,4 +3,5 @@ export const DI = {
   saleEventRepositoryPort: "SaleEventRepositoryPort",
   taxPaymentEventRepositoryPort: "TaxPaymentEventRepositoryPort",
   saleEventAmendmentRepositoryPort: "SaleEventAmendmentRepositoryPort",
+  loggerPort: "LoggerPort",
 } as const;

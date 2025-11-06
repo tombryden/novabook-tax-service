@@ -7,17 +7,24 @@ import express from "express";
 import z from "zod";
 import { container } from "tsyringe";
 import { AddTransactionEventUseCase } from "./core/use-cases/add-transaction-event-use-case";
-import { DI } from "./infrastructure/di/di-tokens";
-import { DataSource } from "typeorm";
 import { GetTaxPositionUseCase } from "./core/use-cases/get-tax-position-use-case";
 import { UpsertAmendmentUseCase } from "./core/use-cases/upsert-amendment-use-case";
+import { dataSource } from "./infrastructure/adaptors/persistence/typeorm/data-source";
+import { createLoggingMiddleware } from "./infrastructure/adaptors/http/logging-middleware";
+import { createErrorHandlingMiddleware } from "./infrastructure/adaptors/http/error-handling-middleware";
+import type { LoggerPort } from "./core/ports/logger-port";
+import { DI } from "./infrastructure/di/di-tokens";
 
 const init = async () => {
-  const dataSource = container.resolve<DataSource>(DI.dataSource);
+  const logger = container.resolve<LoggerPort>(DI.loggerPort);
+
+  logger.info("Initializing database connection");
   await dataSource.initialize();
+  logger.info("Database connection established");
 
   const app = express();
   app.use(express.json());
+  app.use(createLoggingMiddleware(logger));
 
   const port = 4000;
 
@@ -85,8 +92,11 @@ const init = async () => {
     return void res.status(202).send();
   });
 
+  // Error handling middleware must be last (https://expressjs.com/en/guide/error-handling.html)
+  app.use(createErrorHandlingMiddleware());
+
   app.listen(port, () => {
-    console.log(`Tax service listening on port ${port}`);
+    logger.info("Tax service started", { port });
   });
 };
 
