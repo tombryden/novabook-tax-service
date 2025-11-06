@@ -14,6 +14,10 @@ Video showing setup + usage: https://www.screengo.ai/video/1307f5d8-d8ee-4f5d-81
 - Hexagonal Architecture with use cases
 - Active record pattern for TypeORM entities
 
+## Error Handling
+
+Basic error responses have been implemented with express middleware, but this could be further improved in a production system with custom errors.
+
 ## Libraries & Tools Used
 
 - Express

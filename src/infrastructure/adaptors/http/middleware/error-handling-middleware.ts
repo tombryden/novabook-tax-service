@@ -30,5 +30,6 @@ export const createErrorHandlingMiddleware =
     return res.status(500).json({
       error: "Internal server error",
       requestId: req.requestId,
+      message: err.message,
     });
   };
