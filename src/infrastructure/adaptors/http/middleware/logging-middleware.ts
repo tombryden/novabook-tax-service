@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import type { LoggerPort } from "../../../core/ports/logger-port";
+import type { LoggerPort } from "../../../../core/ports/logger-port";
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
