@@ -18,6 +18,10 @@ Video showing setup + usage: https://www.screengo.ai/video/1307f5d8-d8ee-4f5d-81
 
 Basic error responses have been implemented with express middleware, but this could be further improved in a production system with custom errors.
 
+## Tests
+
+Comprehensive tests have been added, including unit tests of the core business logic and a couple of full e2e tests.
+
 ## Libraries & Tools Used
 
 - Express
