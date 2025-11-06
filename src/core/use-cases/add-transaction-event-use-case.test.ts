@@ -5,8 +5,11 @@ import { AddTransactionEventUseCase } from "./add-transaction-event-use-case";
 import type { SaleEventRepositoryPort } from "../ports/sale-event-repository-port";
 import type { TaxPaymentEventRepositoryPort } from "../ports/tax-payment-event-repository";
 import { DI } from "../../infrastructure/di/di-tokens";
+import { initialiseTestLoggerDI } from "../../infrastructure/test-setup";
 
 describe("AddTransactionEventUseCase", () => {
+  initialiseTestLoggerDI();
+
   const childContainer = container.createChildContainer(); // so parallel running test files don't get their IoC container mixed up
 
   // Container registration

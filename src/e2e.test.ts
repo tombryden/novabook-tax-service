@@ -13,6 +13,7 @@ import { DI } from "./infrastructure/di/di-tokens";
 import { AddTransactionEventUseCase } from "./core/use-cases/add-transaction-event-use-case";
 import { GetTaxPositionUseCase } from "./core/use-cases/get-tax-position-use-case";
 import { UpsertAmendmentUseCase } from "./core/use-cases/upsert-amendment-use-case";
+import { initialiseTestLoggerDI } from "./infrastructure/test-setup";
 
 describe("E2E Tests (SQLite In Memory DB)", () => {
   let dataSource: DataSource;
@@ -36,6 +37,7 @@ describe("E2E Tests (SQLite In Memory DB)", () => {
   });
 
   // Register IoC container with real adaptors
+  initialiseTestLoggerDI();
   const childContainer = container.createChildContainer();
   childContainer.registerSingleton(
     DI.saleEventRepositoryPort,

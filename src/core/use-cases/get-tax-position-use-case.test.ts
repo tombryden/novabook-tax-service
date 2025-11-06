@@ -5,8 +5,10 @@ import type { SaleEventRepositoryPort } from "../ports/sale-event-repository-por
 import type { TaxPaymentEventRepositoryPort } from "../ports/tax-payment-event-repository";
 import { DI } from "../../infrastructure/di/di-tokens";
 import { GetTaxPositionUseCase } from "./get-tax-position-use-case";
+import { initialiseTestLoggerDI } from "../../infrastructure/test-setup";
 
 describe("GetTaxPositionUseCase", () => {
+  initialiseTestLoggerDI();
   const childContainer = container.createChildContainer();
 
   // Container registration
